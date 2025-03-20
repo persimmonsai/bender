@@ -48,6 +48,7 @@ pub fn new() -> Command {
                     PossibleValue::new("flist-plus"),
                     PossibleValue::new("vsim"),
                     PossibleValue::new("vcs"),
+                    PossibleValue::new("xm"),
                     PossibleValue::new("verilator"),
                     PossibleValue::new("synopsys"),
                     PossibleValue::new("fusion-compiler"),
@@ -88,7 +89,7 @@ pub fn new() -> Command {
         .arg(
             Arg::new("vlog-arg")
                 .long("vlog-arg")
-                .help("Pass an argument to vlog calls (vsim/vlogan/riviera only)")
+                .help("Pass an argument to vlog calls (vsim/xm/vlogan/riviera only)")
                 .num_args(1..)
                 .action(ArgAction::Append)
                 .value_parser(value_parser!(String)),
@@ -220,6 +221,7 @@ pub fn run(sess: &Session, matches: &ArgMatches) -> Result<()> {
             "flist-plus" => vec!["flist"],
             "vsim" => vec!["vsim", "simulation"],
             "vcs" => vec!["vcs", "simulation"],
+            "xm" => vec!["xm", "simulation"],
             "verilator" => vec!["verilator", "synthesis"],
             "synopsys" => vec!["synopsys", "synthesis"],
             "fusion-compiler" => vec!["fusion-compiler", "synthesis"],
@@ -301,12 +303,13 @@ pub fn run(sess: &Session, matches: &ArgMatches) -> Result<()> {
     if (matches.contains_id("vcom-arg") || matches.contains_id("vlog-arg"))
         && format != "vsim"
         && format != "vcs"
+        && format != "xm"
         && format != "riviera"
         && format != "template"
         && format != "template_json"
     {
         return Err(Error::new(
-            "vsim/vcs-only options can only be used for 'vcs', 'vsim' or 'riviera' format!",
+            "vsim/vcs-only options can only be used for 'vcs', 'xm', 'vsim' or 'riviera' format!",
         ));
     }
     if (matches.get_flag("only-defines")
@@ -348,6 +351,13 @@ pub fn run(sess: &Session, matches: &ArgMatches) -> Result<()> {
         "vcs" => emit_template(
             sess,
             include_str!("../script_fmt/vcs_sh.tera"),
+            matches,
+            targets,
+            srcs,
+        ),
+        "xm" => emit_template(
+            sess,
+            include_str!("../script_fmt/xm_sh.tera"),
             matches,
             targets,
             srcs,
