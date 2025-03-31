@@ -49,7 +49,7 @@ pub fn new() -> Command {
                     PossibleValue::new("flist-plus"),
                     PossibleValue::new("vsim"),
                     PossibleValue::new("vcs"),
-                    PossibleValue::new("xm"),
+                    PossibleValue::new("xcelium"),
                     PossibleValue::new("verilator"),
                     PossibleValue::new("synopsys"),
                     PossibleValue::new("formality"),
@@ -221,7 +221,7 @@ pub fn run(sess: &Session, matches: &ArgMatches) -> Result<()> {
             "flist-plus" => vec!["flist"],
             "vsim" => vec!["vsim", "simulation"],
             "vcs" => vec!["vcs", "simulation"],
-            "xm" => vec!["xm", "simulation"],
+            "xcelium" => vec!["xcelium", "simulation"],
             "verilator" => vec!["verilator", "synthesis"],
             "synopsys" => vec!["synopsys", "synthesis"],
             "formality" => vec!["synopsys", "synthesis", "formality"],
@@ -306,13 +306,13 @@ pub fn run(sess: &Session, matches: &ArgMatches) -> Result<()> {
     if (matches.contains_id("vcom-arg") || matches.contains_id("vlog-arg"))
         && format != "vsim"
         && format != "vcs"
-        && format != "xm"
+        && format != "xcelium"
         && format != "riviera"
         && format != "template"
         && format != "template_json"
     {
         return Err(Error::new(
-            "vsim/vcs-only options can only be used for 'vcs', 'xm', 'vsim' or 'riviera' format!",
+            "vsim/vcs-only options can only be used for 'vcs', 'xcelium', 'vsim' or 'riviera' format!",
         ));
     }
     if (matches.get_flag("only-defines")
@@ -364,9 +364,9 @@ pub fn run(sess: &Session, matches: &ArgMatches) -> Result<()> {
             targets,
             srcs,
         ),
-        "xm" => emit_template(
+        "xcelium" => emit_template(
             sess,
-            include_str!("../script_fmt/xm_sh.tera"),
+            include_str!("../script_fmt/xcelium_sh.tera"),
             matches,
             targets,
             srcs,
