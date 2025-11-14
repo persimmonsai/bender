@@ -379,7 +379,7 @@ pub fn run(sess: &Session, matches: &ArgMatches) -> Result<()> {
             matches,
             targets,
             srcs,
-        ),      
+        ),
         "verilator" => emit_template(
             sess,
             include_str!("../script_fmt/verilator_sh.tera"),
